@@ -19,7 +19,7 @@ $app->post('/register', function () use($app) {
     $user_name = $json->nama;
     $ip_domisili = $json->ip_domisili;
 
-    if (quorumCheck() > 1) {
+    if (quorumCheck() >= 3) {
         registerUser($user_id, $user_name, $ip_domisili);
     }
     
@@ -32,7 +32,7 @@ $app->post('/getSaldo', function () use($app) {
     $json = json_decode($data);
 
     $user_id = $json->user_id;
-    if (quorumCheck() > 1) {
+    if (quorumCheck() >= 3) {
         getSaldo($user_id);
     }
 });
@@ -44,7 +44,7 @@ $app->post('/transfer', function () use($app) {
     $user_id = $json->user_id;
     $nilai = $json->nilai;
 
-    if (quorumCheck() > 1) {
+    if (quorumCheck() >= 3) {
         transfer($user_id, $nilai);
     }
 });
@@ -57,7 +57,7 @@ $app->post('/callTransfer', function () use($app) {
     $nilai = $json->nilai;
     $ip_tujuan = $json->ip_tujuan;
 
-    if (quorumCheck() > 1) {
+    if (quorumCheck() >= 3) {
         callTransfer($user_id, $nilai, $ip_tujuan);
     }
 });
@@ -68,14 +68,14 @@ $app->post('/getTotalSaldo', function () use($app) {
 
     $user_id = $json->user_id;
 
-    if (quorumCheck() > 1) {
+    if (quorumCheck() > 3) {
         getTotalSaldo($user_id);
     }
 });
 
 // Necessary Function
 function quorumCheck() {
-    $array = array("152.118.33.76", "152.118.33.95", "152.118.33.96", "152.118.33.97");
+    $array = array("192.168.75.76", "192.168.75.95", "192.168.75.96", "192.168.75.97", "192.168.75.85", "192.168.75.104", "192.168.75.71");
     $count_ping = 0;
     $ping_payload = "";
     $e = "error";
@@ -96,7 +96,7 @@ function quorumCheck() {
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if($httpCode == 200) {
-             $pong = $json->pong;
+            $pong = $json->pong;
             $count_ping = $count_ping + $pong;
         }
     }
